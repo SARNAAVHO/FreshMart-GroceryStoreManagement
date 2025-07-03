@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 # ✅ Correct PyJWT imports
 import jwt
 from jwt import get_unverified_header, ExpiredSignatureError, InvalidTokenError
-from jwt.algorithms import RSAAlgorithm  # ✅ Use direct import
 
 # ✅ Load environment variables
 load_dotenv()
@@ -23,7 +22,8 @@ def get_signing_key(token):
     jwks = json.loads(urlopen(JWKS_URL).read())
     for key in jwks["keys"]:
         if key["kid"] == header["kid"]:
-            return RSAAlgorithm.from_jwk(json.dumps(key))
+            # Use the RS256 algorithm from default algorithms (avoids RSAAlgorithm import)
+            return jwt.algorithms.get_default_algorithms()["RS256"].from_jwk(json.dumps(key))
     raise Exception("Signing key not found for token")
 
 # ✅ Verify Clerk JWT token
