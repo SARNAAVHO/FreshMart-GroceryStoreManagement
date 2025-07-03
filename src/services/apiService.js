@@ -8,6 +8,7 @@ class ApiService {
 
     // ✅ Safely get token using Clerk frontend (SPA)
     const token = await window.Clerk?.session?.getToken({ template: 'backend' });
+    console.log("Token:", token);
 
 
     cfg.headers = {
