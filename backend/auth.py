@@ -17,7 +17,7 @@ def verify_clerk_token(token):
         payload = jwt.decode(
             token,
             CLERK_JWT_PUBLIC_KEY,
-            algorithms=["RS256"],
+            algorithms=["RS256", "ES256"],
             options={"verify_aud": False}
         )
         return payload
