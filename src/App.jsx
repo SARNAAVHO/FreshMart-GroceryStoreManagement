@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard.jsx';
 import ProductManagement from './components/ProductManagement.jsx';
 import OrderManagement from './components/OrderManagement.jsx';
 import CreateOrder from './components/CreateOrder.jsx';
+import DebugToken from './components/DebugToken.jsx';
 import { ThemeProvider, useTheme } from './context/ThemeContext.jsx';
 
 function AppContent({ activeTab, setActiveTab }) {
@@ -77,14 +78,14 @@ function AppContent({ activeTab, setActiveTab }) {
       <SignedIn>
         <div className={`flex h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
           {/* Mobile Menu Button */}
-          <div className="lg:hidden fixed top-4 left-4 z-50">
+          {/* <div className="lg:hidden fixed top-4 left-4 z-50">
             <button
               onClick={() => setActiveTab('menu')}
               className={`p-2 rounded-lg ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} shadow-lg`}
             >
               <Package className="w-6 h-6" />
             </button>
-          </div>
+          </div> */}
 
           {/* Sidebar */}
           <div className={`w-64 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white'} shadow-lg hidden lg:block transition-colors duration-300`}>
@@ -165,6 +166,10 @@ function AppContent({ activeTab, setActiveTab }) {
                 </div>
               </div>
             </header>
+            {/* 🔍 TEMP: Debug Clerk JWT
+      <div className="px-4 py-2">
+        <DebugToken />
+      </div> */}
 
             {/* Mobile Navigation */}
             <div className="lg:hidden">

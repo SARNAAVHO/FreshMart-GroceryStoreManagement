@@ -22,13 +22,13 @@ const Dashboard = ({ setActiveTab }) => {
       setLoading(true);
       const [products, orders, orderCount, recentOrders] = await Promise.all([
         apiService.getProducts(),
-        apiService.getAllOrders(),
+        apiService.getTotalRevenue(),
         apiService.getOrderCount(),
         apiService.getRecentOrders()
 
       ]);
 
-      const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
+      const totalRevenue = orders.totalRevenue || 0;
       
 
       setStats({

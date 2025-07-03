@@ -2,3 +2,5 @@ Flask
 mysql-connector-python
 python-dotenv
 gunicorn
+clerk-sdk
+pyjwt
