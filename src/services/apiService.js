@@ -2,11 +2,13 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000
 
 class ApiService {
   async request(endpoint, options = {}) {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${API_BASE_URL.replace(/\/+$/, '')}/${endpoint.replace(/^\/+/, '')}`;
+
     const cfg = { ...options };
 
     // ✅ Safely get token using Clerk frontend (SPA)
-    const token = await window.Clerk?.session?.getToken();
+    const token = await window.Clerk?.session?.getToken({ template: 'backend' });
+
 
     cfg.headers = {
       ...(cfg.headers || {}),

@@ -3,6 +3,6 @@ mysql-connector-python
 python-dotenv
 gunicorn
 clerk-sdk
-pyjwt
+PyJWT
 flask-cors
 psycopg2
