@@ -58,7 +58,7 @@ def require_auth(f):
             return '', 200
 
         auth_header = request.headers.get("Authorization")
-        print("🔒 Incoming Authorization:", auth_header)
+        # print("🔒 Incoming Authorization:", auth_header)
         if not auth_header or not auth_header.startswith("Bearer "):
             return jsonify({"error": "Unauthorized"}), 401
 
@@ -66,7 +66,7 @@ def require_auth(f):
         try:
             payload = verify_clerk_token(token)
             g.user_id = payload.get("sub")
-            print("✅ Authenticated user:", g.user_id)
+            # print("✅ Authenticated user:", g.user_id)
         except Exception as e:
             print("Auth error:", e)
             return jsonify({"error": "Invalid or expired token"}), 401

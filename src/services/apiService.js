@@ -23,7 +23,7 @@ class ApiService {
           template: 'backend',
           skipCache: true // Ensures fresh token
         });
-        console.debug("🔐 Clerk Token:", token?.slice(0, 20) + "..."); // Log partial token for security
+        // console.debug("🔐 Clerk Token:", token?.slice(0, 20) + "..."); // Log partial token for security
       }
 
       // Set headers
@@ -42,7 +42,7 @@ class ApiService {
 
       // Handle 401 Unauthorized with token refresh
       if (response.status === 401 && retries > 0) {
-        console.log('Token might be expired, refreshing...');
+        // console.log('Token might be expired, refreshing...');
         await new Promise(resolve => setTimeout(resolve, this.retryDelay));
         return this.request(endpoint, options, retries - 1);
       }
