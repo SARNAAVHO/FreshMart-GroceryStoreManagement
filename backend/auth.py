@@ -2,19 +2,15 @@ import os
 import jwt
 from flask import request, jsonify, g
 from functools import wraps
+from dotenv import load_dotenv
 
-# Load Clerk public key
-CLERK_JWT_PUBLIC_KEY = None
-try:
-    with open("clerk_public_key.pem", "r") as f:
-        CLERK_JWT_PUBLIC_KEY = f.read()
-except FileNotFoundError:
-    # fallback to environment variable
-    CLERK_JWT_PUBLIC_KEY = os.getenv("CLERK_JWT_PUBLIC_KEY")
-    if CLERK_JWT_PUBLIC_KEY:
-        CLERK_JWT_PUBLIC_KEY = CLERK_JWT_PUBLIC_KEY.replace("\\n", "\n")
-    else:
-        raise Exception("Missing Clerk public key. Provide either clerk_public_key.pem or set CLERK_JWT_PUBLIC_KEY in env.")
+load_dotenv()
+CLERK_JWT_PUBLIC_KEY = os.getenv("CLERK_JWT_PUBLIC_KEY")
+
+if CLERK_JWT_PUBLIC_KEY:
+    CLERK_JWT_PUBLIC_KEY = CLERK_JWT_PUBLIC_KEY.replace("\\n", "\n")
+else:
+    raise Exception("Missing Clerk public key. Provide it as CLERK_JWT_PUBLIC_KEY env variable.")
 
 def verify_clerk_token(token):
     try:
