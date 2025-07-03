@@ -6,4 +6,3 @@ clerk-sdk
 pyjwt
 flask-cors
 psycopg2
-functools
