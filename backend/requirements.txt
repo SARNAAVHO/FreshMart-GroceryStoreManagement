@@ -3,6 +3,7 @@ mysql-connector-python
 python-dotenv
 gunicorn
 clerk-sdk
-PyJWT
+PyJWT==2.8.0
 flask-cors
 psycopg2
+cryptography==42.0.5
