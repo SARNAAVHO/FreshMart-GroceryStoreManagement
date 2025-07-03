@@ -1,23 +1,32 @@
-import os
 import jwt
+import json
 from flask import request, jsonify, g
 from functools import wraps
+from jwt import get_unverified_header, algorithms
+from urllib.request import urlopen
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
-CLERK_JWT_PUBLIC_KEY = os.getenv("CLERK_JWT_PUBLIC_KEY")
 
-if CLERK_JWT_PUBLIC_KEY:
-    CLERK_JWT_PUBLIC_KEY = CLERK_JWT_PUBLIC_KEY.replace("\\n", "\n")
-else:
-    raise Exception("Missing Clerk public key. Provide it as CLERK_JWT_PUBLIC_KEY env variable.")
+# Clerk JWKS endpoint
+JWKS_URL = os.getenv("CLERK_JWKS_URL")
+
+def get_signing_key(token):
+    header = get_unverified_header(token)
+    jwks = json.loads(urlopen(JWKS_URL).read())
+    for key in jwks["keys"]:
+        if key["kid"] == header["kid"]:
+            return algorithms.RSAAlgorithm.from_jwk(json.dumps(key))
+    raise Exception("Signing key not found for token")
 
 def verify_clerk_token(token):
     try:
+        signing_key = get_signing_key(token)
         payload = jwt.decode(
             token,
-            CLERK_JWT_PUBLIC_KEY,
-            algorithms=["RS256", "ES256"],
+            signing_key,
+            algorithms=["RS256"],  # Clerk uses RS256 by default
             options={"verify_aud": False}
         )
         return payload
