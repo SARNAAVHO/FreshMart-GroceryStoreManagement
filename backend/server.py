@@ -9,7 +9,7 @@ from auth import require_auth
 app = Flask(__name__)
 
 CORS(app,
-     resources={r"/*": {"origins": "*"}},
+     resources={r"/*": {"origins": "http://localhost:5173"}},
      supports_credentials=True,
      allow_headers=["Content-Type", "Authorization"],
      methods=["GET", "POST", "OPTIONS"])
