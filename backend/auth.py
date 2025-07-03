@@ -8,11 +8,14 @@ from dotenv import load_dotenv
 # ✅ Correct PyJWT imports
 import jwt
 from jwt import get_unverified_header, ExpiredSignatureError, InvalidTokenError
-from jwt.algorithms import RSAAlgorithm
+from jwt import algorithms
 
 # ✅ Load environment variables
 load_dotenv()
 JWKS_URL = os.getenv("CLERK_JWKS_URL")
+
+if not JWKS_URL:
+    raise Exception("Missing Clerk JWKS URL. Set CLERK_JWKS_URL in environment variables.")
 
 # ✅ Fetch the signing key dynamically from Clerk's JWKS
 def get_signing_key(token):
@@ -20,10 +23,10 @@ def get_signing_key(token):
     jwks = json.loads(urlopen(JWKS_URL).read())
     for key in jwks["keys"]:
         if key["kid"] == header["kid"]:
-            return RSAAlgorithm.from_jwk(json.dumps(key))
+            return algorithms.get_default_algorithms()["RS256"].from_jwk(json.dumps(key))
     raise Exception("Signing key not found for token")
 
-# ✅ Verify token
+# ✅ Verify Clerk JWT token
 def verify_clerk_token(token):
     try:
         signing_key = get_signing_key(token)
@@ -39,7 +42,7 @@ def verify_clerk_token(token):
     except InvalidTokenError as e:
         raise Exception(f"Invalid token: {e}")
 
-# ✅ Auth middleware for protected routes
+# ✅ Flask route decorator for authentication
 def require_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -53,7 +56,7 @@ def require_auth(f):
         token = auth_header.split("Bearer ")[1]
         try:
             payload = verify_clerk_token(token)
-            g.user_id = payload.get("sub")  # Clerk user ID
+            g.user_id = payload.get("sub")  # Clerk user ID (safe access)
         except Exception as e:
             print("Auth error:", e)
             return jsonify({"error": "Invalid or expired token"}), 401
